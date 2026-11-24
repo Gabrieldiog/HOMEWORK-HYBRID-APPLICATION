@@ -25,7 +25,7 @@ export const SUBJECT_ICONS: Record<SubjectIconKey, string> = {
   phone: phonePortrait
 };
 
-export const SUBJECT_COLORS = ['#1F6F5C', '#F2A541', '#E4572E', '#3D5A80', '#8E6C8A', '#2A9D8F'];
+export const SUBJECT_COLORS = ['#24624F', '#F2A541', '#E4572E', '#3D5A80', '#8E6C8A', '#2A9D8F'];
 
 export const TASK_TYPES: Record<TaskType, string> = {
   prova: 'Prova',

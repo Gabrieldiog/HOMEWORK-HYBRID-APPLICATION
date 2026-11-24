@@ -3,7 +3,8 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 
-import '@fontsource-variable/manrope';
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource/caveat/700.css';
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';

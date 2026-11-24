@@ -5,90 +5,76 @@ import {
   IonHeader,
   IonIcon,
   IonPage,
-  IonTitle,
   IonToolbar,
   useIonRouter
 } from '@ionic/react';
 import { add, schoolOutline } from 'ionicons/icons';
+import { useMemo } from 'react';
+import AgendaSection from '../components/AgendaSection';
 import EmptyState from '../components/EmptyState';
-import ProgressRing from '../components/ProgressRing';
-import SubjectCard from '../components/SubjectCard';
-import TaskItem from '../components/TaskItem';
+import NextExamHero from '../components/NextExamHero';
+import SubjectRow from '../components/SubjectRow';
 import { useSubjects } from '../context/SubjectsContext';
-import { formatLongDate, greeting } from '../utils/date';
+import { collectEntries } from '../utils/agenda';
+import { daysUntil, formatLongDate, greeting } from '../utils/date';
 
 const Home: React.FC = () => {
   const { subjects, ready, toggleTask } = useSubjects();
   const router = useIonRouter();
 
-  const allTasks = subjects.flatMap((subject) => subject.tasks.map((task) => ({ task, subject })));
-  const finished = allTasks.filter(({ task }) => task.done).length;
-  const progress = allTasks.length ? finished / allTasks.length : 0;
-  const upcoming = allTasks
-    .filter(({ task }) => !task.done)
-    .sort((a, b) => a.task.dueDate.localeCompare(b.task.dueDate))
-    .slice(0, 4);
+  const entries = useMemo(() => collectEntries(subjects), [subjects]);
+  const pending = entries.filter(({ task }) => !task.done);
+  const nextExam =
+    pending.find(({ task }) => task.type === 'prova' && daysUntil(task.dueDate) >= 0) ?? null;
 
-  const openSubject = (id: string) => router.push(`/materia/${id}`);
+  const openSubject = (id: string) => router.push(`/materias/detalhe/${id}`);
 
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonTitle>Semestre</IonTitle>
+          <div className="page-head">
+            <span>{formatLongDate(new Date())}</span>
+            <h1>{greeting()}</h1>
+          </div>
         </IonToolbar>
       </IonHeader>
 
       <IonContent className="ion-padding">
-        <section className="summary">
-          <div>
-            <p className="summary__date">{formatLongDate(new Date())}</p>
-            <h1>{greeting()}!</h1>
-            <p>
-              {finished} de {allTasks.length} entregas concluídas
-            </p>
-          </div>
-          <ProgressRing value={progress} color="var(--ion-color-secondary)">
-            {Math.round(progress * 100)}%
-          </ProgressRing>
-        </section>
+        <NextExamHero
+          exam={nextExam}
+          finished={entries.length - pending.length}
+          total={entries.length}
+        />
 
         {ready && subjects.length === 0 ? (
           <EmptyState
             icon={schoolOutline}
             title="Nenhuma matéria ainda"
-            description="Cadastre as matérias do semestre para acompanhar provas e trabalhos."
+            description="Toque no + para cadastrar a primeira matéria do semestre."
           />
         ) : (
           <>
-            {upcoming.length > 0 && (
-              <>
-                <h2 className="section-title">
-                  Próximas entregas <small>{upcoming.length} mais próximas</small>
-                </h2>
-                <div className="stack">
-                  {upcoming.map(({ task, subject }) => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      color={subject.color}
-                      subjectName={subject.name}
-                      onToggle={(taskId) => toggleTask(subject.id, taskId)}
-                      onOpen={() => openSubject(subject.id)}
-                    />
-                  ))}
-                </div>
-              </>
+            {pending.length > 0 && (
+              <AgendaSection
+                title="Para fazer"
+                entries={pending.slice(0, 3)}
+                onToggle={({ subject, task }) => toggleTask(subject.id, task.id)}
+                onOpen={({ subject }) => openSubject(subject.id)}
+              />
             )}
 
-            <h2 className="section-title">
-              Matérias <small>{subjects.length}</small>
-            </h2>
-            <div className="stack">
-              {subjects.map((subject) => (
-                <SubjectCard key={subject.id} subject={subject} onOpen={openSubject} />
-              ))}
-            </div>
+            <section className="block">
+              <h2 className="block__title">
+                Matérias
+                <span>média</span>
+              </h2>
+              <div className="list">
+                {subjects.map((subject) => (
+                  <SubjectRow key={subject.id} subject={subject} onOpen={openSubject} />
+                ))}
+              </div>
+            </section>
           </>
         )}
 

@@ -14,23 +14,38 @@ import {
   useIonRouter
 } from '@ionic/react';
 import { addCircleOutline, alertCircleOutline, close, trashOutline } from 'ionicons/icons';
-import { useState } from 'react';
+import { CSSProperties, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EmptyState from '../components/EmptyState';
-import StatCard from '../components/StatCard';
+import GradeCalculator from '../components/GradeCalculator';
+import StatRow from '../components/StatRow';
 import SubjectIcon from '../components/SubjectIcon';
 import TaskForm from '../components/TaskForm';
 import TaskItem from '../components/TaskItem';
 import { useSubjects } from '../context/SubjectsContext';
+import { useGradePrompt } from '../hooks/useGradePrompt';
 import { averageGrade, formatGrade } from '../utils/grades';
 
 const SubjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { subjects, ready, addTask, toggleTask, removeTask, removeSubject } = useSubjects();
+  const {
+    subjects,
+    ready,
+    passingGrade,
+    changePassingGrade,
+    addTask,
+    toggleTask,
+    removeTask,
+    removeSubject,
+    setGrade
+  } = useSubjects();
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
   const [formOpen, setFormOpen] = useState(false);
   const subject = subjects.find((item) => item.id === id);
+  const askGrade = useGradePrompt(
+    useCallback((taskId: string, grade?: number) => setGrade(id, taskId, grade), [id, setGrade])
+  );
 
   const leave = () => {
     if (router.canGoBack()) router.goBack();
@@ -85,23 +100,34 @@ const SubjectDetail: React.FC = () => {
 
     return (
       <>
-        <div className="subject-hero">
+        <div className="subject-hero" style={{ '--subject-color': subject.color } as CSSProperties}>
           <SubjectIcon icon={subject.icon} color={subject.color} size="lg" />
-          <h1>{subject.name}</h1>
-          {subject.teacher && <p>{subject.teacher}</p>}
+          <div>
+            <h1>{subject.name}</h1>
+            {subject.teacher && <p>{subject.teacher}</p>}
+          </div>
         </div>
 
-        <div className="stats">
-          <StatCard label="Pendentes" value={pending} />
-          <StatCard label="Entregues" value={subject.tasks.length - pending} />
-          <StatCard
-            label="Média"
-            value={average === null ? '–' : formatGrade(average)}
-            hint={average !== null && average < 6 ? 'Atenção' : undefined}
-          />
-        </div>
+        <StatRow
+          stats={[
+            { label: 'Pendentes', value: pending },
+            { label: 'Entregues', value: subject.tasks.length - pending },
+            {
+              label: 'Média',
+              value: average === null ? '–' : formatGrade(average),
+              tone: average !== null && average < passingGrade ? 'danger' : undefined
+            }
+          ]}
+        />
 
-        <h2 className="section-title">
+        <GradeCalculator
+          tasks={subject.tasks}
+          passing={passingGrade}
+          color={subject.color}
+          onPassingChange={changePassingGrade}
+        />
+
+        <h2 className="block__title">
           Entregas
           <IonButton fill="clear" size="small" onClick={() => setFormOpen(true)}>
             <IonIcon slot="start" icon={addCircleOutline} />
@@ -116,7 +142,7 @@ const SubjectDetail: React.FC = () => {
             description="Adicione provas, trabalhos e atividades dessa matéria."
           />
         ) : (
-          <div className="stack">
+          <div className="list">
             {tasks.map((task) => (
               <TaskItem
                 key={task.id}
@@ -124,9 +150,14 @@ const SubjectDetail: React.FC = () => {
                 color={subject.color}
                 onToggle={(taskId) => toggleTask(subject.id, taskId)}
                 onRemove={(taskId) => removeTask(subject.id, taskId)}
+                onOpen={task.done ? () => askGrade(task) : undefined}
               />
             ))}
           </div>
+        )}
+
+        {tasks.length > 0 && (
+          <p className="hint">Toque numa entrega concluída para lançar a nota. Arraste para o lado para excluir.</p>
         )}
 
         <IonModal

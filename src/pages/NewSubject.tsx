@@ -11,7 +11,7 @@ import {
   useIonRouter,
   useIonToast
 } from '@ionic/react';
-import { useState } from 'react';
+import { CSSProperties, useState } from 'react';
 import ColorPicker from '../components/ColorPicker';
 import IconPicker from '../components/IconPicker';
 import SubjectIcon from '../components/SubjectIcon';
@@ -33,7 +33,7 @@ const NewSubject: React.FC = () => {
     if (!valid) return;
     const subject = addSubject({ name: name.trim(), teacher: teacher.trim(), icon, color });
     presentToast({ message: `${subject.name} adicionada`, duration: 1800, position: 'bottom' });
-    router.push(`/materia/${subject.id}`, 'forward', 'replace');
+    router.push(`/materias/detalhe/${subject.id}`, 'forward', 'replace');
   };
 
   return (
@@ -48,10 +48,12 @@ const NewSubject: React.FC = () => {
       </IonHeader>
 
       <IonContent className="ion-padding">
-        <div className="subject-hero">
+        <div className="subject-hero" style={{ '--subject-color': color } as CSSProperties}>
           <SubjectIcon icon={icon} color={color} size="lg" />
-          <h1>{name.trim() || 'Nome da matéria'}</h1>
-          <p>{teacher.trim() || 'Professor(a)'}</p>
+          <div>
+            <h1>{name.trim() || 'Nome da matéria'}</h1>
+            <p>{teacher.trim() || 'Professor(a)'}</p>
+          </div>
         </div>
 
         <form
