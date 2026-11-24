@@ -14,7 +14,7 @@ import {
   useIonRouter
 } from '@ionic/react';
 import { addCircleOutline, alertCircleOutline, close, trashOutline } from 'ionicons/icons';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EmptyState from '../components/EmptyState';
 import StatCard from '../components/StatCard';
@@ -22,15 +22,19 @@ import SubjectIcon from '../components/SubjectIcon';
 import TaskForm from '../components/TaskForm';
 import TaskItem from '../components/TaskItem';
 import { useSubjects } from '../context/SubjectsContext';
+import { useGradePrompt } from '../hooks/useGradePrompt';
 import { averageGrade, formatGrade } from '../utils/grades';
 
 const SubjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { subjects, ready, addTask, toggleTask, removeTask, removeSubject } = useSubjects();
+  const { subjects, ready, addTask, toggleTask, removeTask, removeSubject, setGrade } = useSubjects();
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
   const [formOpen, setFormOpen] = useState(false);
   const subject = subjects.find((item) => item.id === id);
+  const askGrade = useGradePrompt(
+    useCallback((taskId: string, grade?: number) => setGrade(id, taskId, grade), [id, setGrade])
+  );
 
   const leave = () => {
     if (router.canGoBack()) router.goBack();
@@ -124,9 +128,14 @@ const SubjectDetail: React.FC = () => {
                 color={subject.color}
                 onToggle={(taskId) => toggleTask(subject.id, taskId)}
                 onRemove={(taskId) => removeTask(subject.id, taskId)}
+                onOpen={task.done ? () => askGrade(task) : undefined}
               />
             ))}
           </div>
+        )}
+
+        {subject.tasks.some((task) => task.done) && (
+          <p className="hint">Toque numa entrega concluída para lançar ou editar a nota.</p>
         )}
 
         <IonModal

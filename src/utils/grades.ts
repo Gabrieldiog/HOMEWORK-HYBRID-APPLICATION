@@ -9,3 +9,11 @@ export function averageGrade(tasks: Task[]) {
 export function formatGrade(grade: number) {
   return grade.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 }
+
+export function parseGrade(input: string) {
+  const normalized = input.trim().replace(',', '.');
+  if (normalized === '') return null;
+  const grade = Number(normalized);
+  if (!Number.isFinite(grade) || grade < 0 || grade > 10) return null;
+  return Math.round(grade * 10) / 10;
+}

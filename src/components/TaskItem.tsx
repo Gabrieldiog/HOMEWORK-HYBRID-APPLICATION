@@ -27,6 +27,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, color, subjectName, onToggle,
     <div
       className={`task-item${task.done ? ' task-item--done' : ''}`}
       style={{ borderLeftColor: color }}
+      role={onOpen ? 'button' : undefined}
       onClick={onOpen}
     >
       {onToggle && (

@@ -347,3 +347,14 @@ h3 {
   margin: 0;
   color: var(--app-muted);
 }
+
+.hint {
+  margin: 14px 4px 0;
+  color: var(--app-muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.task-item[role='button'] {
+  cursor: pointer;
+}

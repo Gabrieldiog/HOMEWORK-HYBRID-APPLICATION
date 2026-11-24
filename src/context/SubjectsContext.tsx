@@ -11,6 +11,7 @@ interface SubjectsContextValue {
   addTask: (subjectId: string, draft: TaskDraft) => void;
   toggleTask: (subjectId: string, taskId: string) => void;
   removeTask: (subjectId: string, taskId: string) => void;
+  setGrade: (subjectId: string, taskId: string, grade?: number) => void;
 }
 
 const SubjectsContext = createContext<SubjectsContextValue | null>(null);
@@ -67,9 +68,17 @@ export const SubjectsProvider: React.FC<{ children: ReactNode }> = ({ children }
     [updateTasks]
   );
 
+  const setGrade = useCallback(
+    (subjectId: string, taskId: string, grade?: number) =>
+      updateTasks(subjectId, (tasks) =>
+        tasks.map((task) => (task.id === taskId ? { ...task, grade } : task))
+      ),
+    [updateTasks]
+  );
+
   const value = useMemo(
-    () => ({ subjects, ready, addSubject, removeSubject, addTask, toggleTask, removeTask }),
-    [subjects, ready, addSubject, removeSubject, addTask, toggleTask, removeTask]
+    () => ({ subjects, ready, addSubject, removeSubject, addTask, toggleTask, removeTask, setGrade }),
+    [subjects, ready, addSubject, removeSubject, addTask, toggleTask, removeTask, setGrade]
   );
 
   return <SubjectsContext.Provider value={value}>{children}</SubjectsContext.Provider>;
