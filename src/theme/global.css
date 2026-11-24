@@ -54,8 +54,11 @@ h3 {
 .summary__date {
   margin: 0;
   font-size: 0.8rem;
-  text-transform: capitalize;
   opacity: 0.8;
+}
+
+.summary__date::first-letter {
+  text-transform: uppercase;
 }
 
 .summary h1 {

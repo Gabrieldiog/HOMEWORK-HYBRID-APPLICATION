@@ -1,11 +1,12 @@
 import { Preferences } from '@capacitor/preferences';
+import { seedSubjects } from '../data/seed';
 import { Subject } from '../types/subject';
 
 const SUBJECTS_KEY = 'semestre.subjects';
 
 export async function loadSubjects(): Promise<Subject[]> {
   const { value } = await Preferences.get({ key: SUBJECTS_KEY });
-  if (!value) return [];
+  if (value === null) return seedSubjects();
 
   try {
     const parsed = JSON.parse(value);

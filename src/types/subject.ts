@@ -18,6 +18,7 @@ export interface Task {
   type: TaskType;
   dueDate: string;
   done: boolean;
+  grade?: number;
 }
 
 export interface Subject {

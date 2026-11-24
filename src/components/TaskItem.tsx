@@ -3,6 +3,7 @@ import { checkmark, trashOutline } from 'ionicons/icons';
 import { TASK_TYPES } from '../constants/subject';
 import { Task } from '../types/subject';
 import { daysUntil, dueLabel, formatShortDate } from '../utils/date';
+import { formatGrade } from '../utils/grades';
 
 interface TaskItemProps {
   task: Task;
@@ -15,6 +16,11 @@ interface TaskItemProps {
 
 const TaskItem: React.FC<TaskItemProps> = ({ task, color, subjectName, onToggle, onRemove, onOpen }) => {
   const late = !task.done && daysUntil(task.dueDate) < 0;
+  const status = task.done
+    ? typeof task.grade === 'number'
+      ? `Nota ${formatGrade(task.grade)}`
+      : 'Entregue'
+    : dueLabel(task.dueDate);
   const meta = [TASK_TYPES[task.type], subjectName, formatShortDate(task.dueDate)].filter(Boolean).join(' · ');
 
   return (
@@ -42,7 +48,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, color, subjectName, onToggle,
         <span>{meta}</span>
       </div>
       <span className={`task-item__due${late ? ' is-late' : ''}`}>
-        {task.done ? 'Entregue' : dueLabel(task.dueDate)}
+        {status}
       </span>
       {onRemove && (
         <button

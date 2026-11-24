@@ -4,5 +4,16 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: { host: true, port: 5173 },
-  preview: { host: true, port: 4173 }
+  preview: { host: true, port: 4173 },
+  build: {
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          ionic: ['@ionic/react', '@ionic/react-router'],
+          react: ['react', 'react-dom', 'react-router-dom']
+        }
+      }
+    }
+  }
 });
