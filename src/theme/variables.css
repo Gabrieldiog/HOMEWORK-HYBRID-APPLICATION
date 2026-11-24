@@ -1,0 +1,35 @@
+:root {
+  --ion-font-family: 'Manrope Variable', system-ui, sans-serif;
+
+  --ion-color-primary: #1f6f5c;
+  --ion-color-primary-rgb: 31, 111, 92;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1b6251;
+  --ion-color-primary-tint: #357d6c;
+
+  --ion-color-secondary: #f2a541;
+  --ion-color-secondary-rgb: 242, 165, 65;
+  --ion-color-secondary-contrast: #1d1d1d;
+  --ion-color-secondary-contrast-rgb: 29, 29, 29;
+  --ion-color-secondary-shade: #d59139;
+  --ion-color-secondary-tint: #f3ae54;
+
+  --ion-color-danger: #e4572e;
+  --ion-color-danger-rgb: 228, 87, 46;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #c94d28;
+  --ion-color-danger-tint: #e76843;
+
+  --ion-background-color: #f6f4ee;
+  --ion-background-color-rgb: 246, 244, 238;
+  --ion-text-color: #1d2b27;
+  --ion-text-color-rgb: 29, 43, 39;
+  --ion-toolbar-background: #f6f4ee;
+
+  --app-surface: #ffffff;
+  --app-muted: #6b7a75;
+  --app-border: #e6e2d8;
+  --app-radius: 18px;
+}
