@@ -10,11 +10,12 @@ interface AgendaSectionProps {
 }
 
 const AgendaSection: React.FC<AgendaSectionProps> = ({ title, entries, tone, onToggle, onOpen }) => (
-  <section>
-    <h2 className={`section-title${tone ? ` section-title--${tone}` : ''}`}>
-      {title} <small>{entries.length}</small>
+  <section className="block">
+    <h2 className={`block__title${tone ? ` is-${tone}` : ''}`}>
+      {title}
+      <span>{entries.length}</span>
     </h2>
-    <div className="stack">
+    <div className="list">
       {entries.map((entry) => (
         <TaskItem
           key={entry.task.id}

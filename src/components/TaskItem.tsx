@@ -1,5 +1,6 @@
-import { IonIcon } from '@ionic/react';
+import { IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding } from '@ionic/react';
 import { checkmark, trashOutline } from 'ionicons/icons';
+import { CSSProperties } from 'react';
 import { TASK_TYPES } from '../constants/subject';
 import { Task } from '../types/subject';
 import { daysUntil, dueLabel, formatShortDate } from '../utils/date';
@@ -18,24 +19,24 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, color, subjectName, onToggle,
   const late = !task.done && daysUntil(task.dueDate) < 0;
   const status = task.done
     ? typeof task.grade === 'number'
-      ? `Nota ${formatGrade(task.grade)}`
-      : 'Entregue'
-    : dueLabel(task.dueDate);
-  const meta = [TASK_TYPES[task.type], subjectName, formatShortDate(task.dueDate)].filter(Boolean).join(' · ');
+      ? `nota ${formatGrade(task.grade)}`
+      : 'entregue'
+    : dueLabel(task.dueDate).toLowerCase();
 
-  return (
-    <div
-      className={`task-item${task.done ? ' task-item--done' : ''}`}
-      style={{ borderLeftColor: color }}
-      role={onOpen ? 'button' : undefined}
+  const item = (
+    <IonItem
+      lines="none"
+      detail={false}
+      className={`task-item${task.done ? ' is-done' : ''}${onOpen ? ' is-clickable' : ''}`}
+      style={{ '--task-color': color } as CSSProperties}
       onClick={onOpen}
     >
       {onToggle && (
         <button
           type="button"
+          slot="start"
           className="task-item__check"
           aria-label={task.done ? 'Marcar como pendente' : 'Marcar como entregue'}
-          style={{ borderColor: color, backgroundColor: task.done ? color : 'transparent' }}
           onClick={(event) => {
             event.stopPropagation();
             onToggle(task.id);
@@ -46,25 +47,29 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, color, subjectName, onToggle,
       )}
       <div className="task-item__info">
         <strong>{task.title}</strong>
-        <span>{meta}</span>
+        <span>
+          {subjectName && task.type === 'prova' && <em className="task-item__tag">{TASK_TYPES.prova}</em>}
+          {subjectName ?? TASK_TYPES[task.type]}
+        </span>
       </div>
-      <span className={`task-item__due${late ? ' is-late' : ''}`}>
-        {status}
-      </span>
-      {onRemove && (
-        <button
-          type="button"
-          className="task-item__remove"
-          aria-label="Excluir entrega"
-          onClick={(event) => {
-            event.stopPropagation();
-            onRemove(task.id);
-          }}
-        >
-          <IonIcon icon={trashOutline} />
-        </button>
-      )}
-    </div>
+      <div slot="end" className={`task-item__due${late ? ' is-late' : ''}`}>
+        <strong>{formatShortDate(task.dueDate)}</strong>
+        <span>{status}</span>
+      </div>
+    </IonItem>
+  );
+
+  if (!onRemove) return item;
+
+  return (
+    <IonItemSliding>
+      {item}
+      <IonItemOptions side="end">
+        <IonItemOption color="danger" onClick={() => onRemove(task.id)}>
+          <IonIcon slot="icon-only" icon={trashOutline} aria-label="Excluir entrega" />
+        </IonItemOption>
+      </IonItemOptions>
+    </IonItemSliding>
   );
 };
 

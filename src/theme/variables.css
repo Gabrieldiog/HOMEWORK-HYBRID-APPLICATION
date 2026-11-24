@@ -1,35 +1,41 @@
 :root {
-  --ion-font-family: 'Manrope Variable', system-ui, sans-serif;
+  --ion-font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --font-chalk: 'Caveat', 'Bricolage Grotesque Variable', cursive;
 
-  --ion-color-primary: #1f6f5c;
-  --ion-color-primary-rgb: 31, 111, 92;
+  --board: #2b4a3f;
+  --board-deep: #1f3830;
+  --chalk: #eef1ea;
+  --chalk-yellow: #f4d35e;
+
+  --ion-color-primary: #24624f;
+  --ion-color-primary-rgb: 36, 98, 79;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #1b6251;
-  --ion-color-primary-tint: #357d6c;
+  --ion-color-primary-shade: #205646;
+  --ion-color-primary-tint: #3a7261;
 
-  --ion-color-secondary: #f2a541;
-  --ion-color-secondary-rgb: 242, 165, 65;
-  --ion-color-secondary-contrast: #1d1d1d;
-  --ion-color-secondary-contrast-rgb: 29, 29, 29;
-  --ion-color-secondary-shade: #d59139;
-  --ion-color-secondary-tint: #f3ae54;
+  --ion-color-secondary: #f4d35e;
+  --ion-color-secondary-rgb: 244, 211, 94;
+  --ion-color-secondary-contrast: #1a2420;
+  --ion-color-secondary-contrast-rgb: 26, 36, 32;
+  --ion-color-secondary-shade: #d7ba53;
+  --ion-color-secondary-tint: #f5d76e;
 
-  --ion-color-danger: #e4572e;
-  --ion-color-danger-rgb: 228, 87, 46;
+  --ion-color-danger: #d1495b;
+  --ion-color-danger-rgb: 209, 73, 91;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #c94d28;
-  --ion-color-danger-tint: #e76843;
+  --ion-color-danger-shade: #b84050;
+  --ion-color-danger-tint: #d65b6b;
 
-  --ion-background-color: #f6f4ee;
-  --ion-background-color-rgb: 246, 244, 238;
-  --ion-text-color: #1d2b27;
-  --ion-text-color-rgb: 29, 43, 39;
-  --ion-toolbar-background: #f6f4ee;
+  --ion-background-color: #eef1ee;
+  --ion-background-color-rgb: 238, 241, 238;
+  --ion-text-color: #17211d;
+  --ion-text-color-rgb: 23, 33, 29;
+  --ion-toolbar-background: #eef1ee;
+  --ion-item-background: transparent;
 
   --app-surface: #ffffff;
-  --app-muted: #6b7a75;
-  --app-border: #e6e2d8;
-  --app-radius: 18px;
+  --app-muted: #637069;
+  --app-line: #e2e7e3;
 }

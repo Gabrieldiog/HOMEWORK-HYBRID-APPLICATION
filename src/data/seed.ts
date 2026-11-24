@@ -20,7 +20,7 @@ export function seedSubjects(): Subject[] {
       name: 'Desenvolvimento Mobile',
       teacher: 'Prof. de Híbridos',
       icon: 'phone',
-      color: '#1F6F5C',
+      color: '#24624F',
       createdAt,
       tasks: [
         task('mobile-a1', 'Prova A1', 'prova', inDays(-40), true, 9.5),

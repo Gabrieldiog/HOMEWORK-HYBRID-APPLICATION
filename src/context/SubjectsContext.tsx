@@ -1,11 +1,13 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { loadSubjects, saveSubjects } from '../services/storage';
+import { loadPassingGrade, loadSubjects, savePassingGrade, saveSubjects } from '../services/storage';
 import { Subject, SubjectDraft, Task, TaskDraft } from '../types/subject';
 import { createId } from '../utils/id';
 
 interface SubjectsContextValue {
   subjects: Subject[];
   ready: boolean;
+  passingGrade: number;
+  changePassingGrade: (grade: number) => void;
   addSubject: (draft: SubjectDraft) => Subject;
   removeSubject: (id: string) => void;
   addTask: (subjectId: string, draft: TaskDraft) => void;
@@ -19,11 +21,20 @@ const SubjectsContext = createContext<SubjectsContextValue | null>(null);
 export const SubjectsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [ready, setReady] = useState(false);
+  const [passingGrade, setPassingGrade] = useState(6);
 
   useEffect(() => {
-    loadSubjects()
-      .then(setSubjects)
+    Promise.all([loadSubjects(), loadPassingGrade()])
+      .then(([storedSubjects, storedPassing]) => {
+        setSubjects(storedSubjects);
+        setPassingGrade(storedPassing);
+      })
       .finally(() => setReady(true));
+  }, []);
+
+  const changePassingGrade = useCallback((grade: number) => {
+    setPassingGrade(grade);
+    savePassingGrade(grade).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -77,8 +88,19 @@ export const SubjectsProvider: React.FC<{ children: ReactNode }> = ({ children }
   );
 
   const value = useMemo(
-    () => ({ subjects, ready, addSubject, removeSubject, addTask, toggleTask, removeTask, setGrade }),
-    [subjects, ready, addSubject, removeSubject, addTask, toggleTask, removeTask, setGrade]
+    () => ({
+      subjects,
+      ready,
+      passingGrade,
+      changePassingGrade,
+      addSubject,
+      removeSubject,
+      addTask,
+      toggleTask,
+      removeTask,
+      setGrade
+    }),
+    [subjects, ready, passingGrade, changePassingGrade, addSubject, removeSubject, addTask, toggleTask, removeTask, setGrade]
   );
 
   return <SubjectsContext.Provider value={value}>{children}</SubjectsContext.Provider>;
