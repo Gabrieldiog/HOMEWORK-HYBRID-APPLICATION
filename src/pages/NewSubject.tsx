@@ -33,7 +33,7 @@ const NewSubject: React.FC = () => {
     if (!valid) return;
     const subject = addSubject({ name: name.trim(), teacher: teacher.trim(), icon, color });
     presentToast({ message: `${subject.name} adicionada`, duration: 1800, position: 'bottom' });
-    router.push(`/materia/${subject.id}`, 'forward', 'replace');
+    router.push(`/materias/detalhe/${subject.id}`, 'forward', 'replace');
   };
 
   return (

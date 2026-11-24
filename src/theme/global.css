@@ -358,3 +358,14 @@ h3 {
 .task-item[role='button'] {
   cursor: pointer;
 }
+
+.section-title--danger {
+  color: var(--ion-color-danger);
+}
+
+ion-tab-bar {
+  --background: var(--app-surface);
+  --border: 1px solid var(--app-border);
+  --color: var(--app-muted);
+  --color-selected: var(--ion-color-primary);
+}

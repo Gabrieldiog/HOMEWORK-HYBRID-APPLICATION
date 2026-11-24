@@ -7,7 +7,7 @@ export function averageGrade(tasks: Task[]) {
 }
 
 export function formatGrade(grade: number) {
-  return grade.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return grade.toFixed(1).replace('.', ',');
 }
 
 export function parseGrade(input: string) {

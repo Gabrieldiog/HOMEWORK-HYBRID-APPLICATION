@@ -29,7 +29,7 @@ const Home: React.FC = () => {
     .sort((a, b) => a.task.dueDate.localeCompare(b.task.dueDate))
     .slice(0, 4);
 
-  const openSubject = (id: string) => router.push(`/materia/${id}`);
+  const openSubject = (id: string) => router.push(`/materias/detalhe/${id}`);
 
   return (
     <IonPage>
