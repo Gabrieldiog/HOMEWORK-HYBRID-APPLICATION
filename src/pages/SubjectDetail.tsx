@@ -22,6 +22,7 @@ import StatRow from '../components/StatRow';
 import SubjectIcon from '../components/SubjectIcon';
 import TaskForm from '../components/TaskForm';
 import TaskItem from '../components/TaskItem';
+import { useSettings } from '../context/SettingsContext';
 import { useSubjects } from '../context/SubjectsContext';
 import { useGradePrompt } from '../hooks/useGradePrompt';
 import { averageGrade, formatGrade } from '../utils/grades';
@@ -31,14 +32,14 @@ const SubjectDetail: React.FC = () => {
   const {
     subjects,
     ready,
-    passingGrade,
-    changePassingGrade,
     addTask,
     toggleTask,
     removeTask,
     removeSubject,
     setGrade
   } = useSubjects();
+  const { settings, updateSettings } = useSettings();
+  const passingGrade = settings.passingGrade;
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
   const [formOpen, setFormOpen] = useState(false);
@@ -124,7 +125,7 @@ const SubjectDetail: React.FC = () => {
           tasks={subject.tasks}
           passing={passingGrade}
           color={subject.color}
-          onPassingChange={changePassingGrade}
+          onPassingChange={(grade) => updateSettings({ passingGrade: grade })}
         />
 
         <h2 className="block__title">

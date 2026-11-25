@@ -1,10 +1,12 @@
 import { Preferences } from '@capacitor/preferences';
 import { seedSubjects } from '../data/seed';
 import { Subject } from '../types/subject';
+import { Settings } from '../types/settings';
 
 const SUBJECTS_KEY = 'semestre.subjects';
-const PASSING_KEY = 'semestre.passing-grade';
-const DEFAULT_PASSING = 6;
+const SETTINGS_KEY = 'semestre.settings';
+
+export const DEFAULT_SETTINGS: Settings = { theme: 'system', passingGrade: 6 };
 
 export async function loadSubjects(): Promise<Subject[]> {
   const { value } = await Preferences.get({ key: SUBJECTS_KEY });
@@ -22,12 +24,17 @@ export async function saveSubjects(subjects: Subject[]) {
   await Preferences.set({ key: SUBJECTS_KEY, value: JSON.stringify(subjects) });
 }
 
-export async function loadPassingGrade() {
-  const { value } = await Preferences.get({ key: PASSING_KEY });
-  const grade = Number(value);
-  return value !== null && Number.isFinite(grade) ? grade : DEFAULT_PASSING;
+export async function loadSettings(): Promise<Settings> {
+  const { value } = await Preferences.get({ key: SETTINGS_KEY });
+  if (!value) return DEFAULT_SETTINGS;
+
+  try {
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(value) };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
 }
 
-export async function savePassingGrade(grade: number) {
-  await Preferences.set({ key: PASSING_KEY, value: String(grade) });
+export async function saveSettings(settings: Settings) {
+  await Preferences.set({ key: SETTINGS_KEY, value: JSON.stringify(settings) });
 }
