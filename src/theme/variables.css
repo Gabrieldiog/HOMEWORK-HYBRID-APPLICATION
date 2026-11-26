@@ -39,3 +39,34 @@
   --app-muted: #637069;
   --app-line: #e2e7e3;
 }
+
+:root {
+  --app-tint: rgba(23, 33, 29, 0.06);
+  --app-shadow: rgba(23, 33, 29, 0.14);
+}
+
+:root.ion-palette-dark {
+  --ion-color-primary: #5fb79a;
+  --ion-color-primary-rgb: 95, 183, 154;
+  --ion-color-primary-contrast: #0f1714;
+  --ion-color-primary-contrast-rgb: 15, 23, 20;
+  --ion-color-primary-shade: #54a188;
+  --ion-color-primary-tint: #6fbea4;
+
+  --ion-color-danger: #ef6f7f;
+  --ion-color-danger-rgb: 239, 111, 127;
+
+  --ion-background-color: #131b18;
+  --ion-background-color-rgb: 19, 27, 24;
+  --ion-text-color: #e4eae6;
+  --ion-text-color-rgb: 228, 234, 230;
+  --ion-toolbar-background: #131b18;
+  --ion-item-background: transparent;
+  --ion-overlay-background-color: #1c2622;
+
+  --app-surface: #1c2622;
+  --app-muted: #92a199;
+  --app-line: #2a3631;
+  --app-tint: rgba(228, 234, 230, 0.07);
+  --app-shadow: rgba(0, 0, 0, 0.4);
+}

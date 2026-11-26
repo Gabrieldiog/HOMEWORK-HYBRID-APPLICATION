@@ -1,13 +1,14 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { loadPassingGrade, loadSubjects, savePassingGrade, saveSubjects } from '../services/storage';
+import { seedSubjects } from '../data/seed';
+import { loadSubjects, saveSubjects } from '../services/storage';
 import { Subject, SubjectDraft, Task, TaskDraft } from '../types/subject';
 import { createId } from '../utils/id';
 
 interface SubjectsContextValue {
   subjects: Subject[];
   ready: boolean;
-  passingGrade: number;
-  changePassingGrade: (grade: number) => void;
+  restoreSample: () => void;
+  clearAll: () => void;
   addSubject: (draft: SubjectDraft) => Subject;
   removeSubject: (id: string) => void;
   addTask: (subjectId: string, draft: TaskDraft) => void;
@@ -21,21 +22,16 @@ const SubjectsContext = createContext<SubjectsContextValue | null>(null);
 export const SubjectsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [ready, setReady] = useState(false);
-  const [passingGrade, setPassingGrade] = useState(6);
 
   useEffect(() => {
-    Promise.all([loadSubjects(), loadPassingGrade()])
-      .then(([storedSubjects, storedPassing]) => {
-        setSubjects(storedSubjects);
-        setPassingGrade(storedPassing);
-      })
+    loadSubjects()
+      .then(setSubjects)
       .finally(() => setReady(true));
   }, []);
 
-  const changePassingGrade = useCallback((grade: number) => {
-    setPassingGrade(grade);
-    savePassingGrade(grade).catch(() => undefined);
-  }, []);
+  const restoreSample = useCallback(() => setSubjects(seedSubjects()), []);
+
+  const clearAll = useCallback(() => setSubjects([]), []);
 
   useEffect(() => {
     if (ready) saveSubjects(subjects).catch(() => undefined);
@@ -91,8 +87,8 @@ export const SubjectsProvider: React.FC<{ children: ReactNode }> = ({ children }
     () => ({
       subjects,
       ready,
-      passingGrade,
-      changePassingGrade,
+      restoreSample,
+      clearAll,
       addSubject,
       removeSubject,
       addTask,
@@ -100,7 +96,7 @@ export const SubjectsProvider: React.FC<{ children: ReactNode }> = ({ children }
       removeTask,
       setGrade
     }),
-    [subjects, ready, passingGrade, changePassingGrade, addSubject, removeSubject, addTask, toggleTask, removeTask, setGrade]
+    [subjects, ready, restoreSample, clearAll, addSubject, removeSubject, addTask, toggleTask, removeTask, setGrade]
   );
 
   return <SubjectsContext.Provider value={value}>{children}</SubjectsContext.Provider>;
